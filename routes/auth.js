@@ -1,5 +1,5 @@
 import express from 'express';
-import { signout, signup, signin } from "../controllers/auth.js"
+import { signout, signup, signin, validateJWT } from "../controllers/auth.js"
 import { check } from 'express-validator';
 const router = express.Router();
 
@@ -10,11 +10,14 @@ router.post("/signup",[
 ], signup);
 
 router.post("/signin",[
-    check("email", "email is required").isEmail(),
-    check("password", "password field is required").isLength({ min : 3}),
+    
+   check("email", "email is required").isEmail(),
+   check("password", "password field is required").isLength({ min : 3}),
 ], 
 signin
 );
+
+router.post("/validateJWT", validateJWT)
 
 router.get("/signout", signout);
 

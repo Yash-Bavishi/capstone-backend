@@ -3,8 +3,8 @@ import { check, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
 export const signup = (req, res) => {
-
    const errors = validationResult(req)
+   console.log(errors)
    if(!errors.isEmpty()){
       return res.status(422).json({
         error: errors.array()[0].msg
@@ -29,7 +29,9 @@ export const signup = (req, res) => {
 
 export const signin = (req, res) => {
   const errors = validationResult(req);
+  console.log("HELLO FROM BACKEND")
   const {email, password} = req.body;
+  console.log(req.body)
   
 
   if(!errors.isEmpty()){
@@ -58,11 +60,22 @@ export const signin = (req, res) => {
    // send response to frontend
    const {_id, name, email, role} = user;
    return res.json({token, user: {_id, name, email, role}})
-
+   
  }) 
-
-
 };
+
+export const validateJWT = async (req,res) => {
+  const token = req.body
+  console.log(token.token)
+  try {
+
+  const ans = await jwt.verify(token.token, process.env.SECRET)
+  res.status(200).send("OK")
+  } catch (e){
+    res.status(400).send("Invalid")
+  }
+}
+
 
 export const signout = (req, res) => {
   res.clearCookie("token");
